@@ -1,0 +1,32 @@
+---
+# Minimal kernel and OS tuning for HANA/S4. Extend based on SAP Notes for your distro.
+- name: Ensure hostname is set (avoid short/long name mismatch)
+hostname:
+name: "{{ inventory_hostname }}"
+
+
+- name: Ensure required users/groups exist
+user:
+name: sapsys
+state: present
+# Placeholder — typically SAP installers manage SAP* users; keep minimal here.
+
+
+- name: Open required firewalld ports (simplified example)
+block:
+- name: Ensure firewalld is installed
+package:
+name: firewalld
+state: present
+- name: Enable and start firewalld
+service:
+name: firewalld
+enabled: true
+state: started
+- name: Allow SSH
+firewalld:
+service: ssh
+permanent: true
+state: enabled
+immediate: true
+when: ansible_facts['os_family'] in ['RedHat', 'Suse']

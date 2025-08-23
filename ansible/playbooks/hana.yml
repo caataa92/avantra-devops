@@ -1,0 +1,6 @@
+---
+- name: Install SAP HANA / S4 using SWPM unattended
+hosts: sap_vms
+gather_facts: true
+roles:
+- role: hana_install

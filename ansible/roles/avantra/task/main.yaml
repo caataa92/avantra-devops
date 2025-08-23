@@ -1,0 +1,29 @@
+---
+- name: Create avantra dir
+file:
+path: /opt/avantra
+state: directory
+
+
+- name: Download avantra agent (example placeholder)
+get_url:
+url: "{{ avantra_server_url }}/downloads/agent-{{ avantra_agent_version }}.tar.gz"
+dest: /opt/avantra/agent.tar.gz
+ignore_errors: true # Replace with real URL/auth handling
+
+
+- name: Extract agent
+unarchive:
+src: /opt/avantra/agent.tar.gz
+dest: /opt/avantra/
+remote_src: true
+when: ansible_facts['os_family'] is defined
+
+
+- name: Register agent (placeholder)
+shell: |
+/opt/avantra/agent/install.sh --server {{ avantra_server_url }} \
+--key {{ avantra_registration_key }} --non-interactive
+args:
+creates: /etc/avantra/agent.conf
+ignore_errors: true

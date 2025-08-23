@@ -1,0 +1,9 @@
+---
+- name: End-to-end provisioning (OS prep -> HANA -> Avantra)
+hosts: sap_vms
+gather_facts: true
+roles:
+- role: common
+- role: sap_prereqs
+- role: hana_install
+- role: avantra_agent

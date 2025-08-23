@@ -1,0 +1,6 @@
+---
+- name: Install and register Avantra agent
+hosts: sap_vms
+gather_facts: true
+roles:
+- role: avantra_agent

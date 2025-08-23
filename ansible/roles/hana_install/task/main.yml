@@ -1,0 +1,62 @@
+---
+- name: Ensure SAP media dir exists
+file:
+path: "{{ sap_media_dir }}"
+state: directory
+
+
+- name: Verify SWPM SAR present
+stat:
+path: "{{ lookup('ansible.builtin.first_found', params={'files': [swpsar_path], 'paths': [sap_media_dir]}) }}"
+register: swpm_sar
+
+
+- name: Fail if SWPM is missing
+fail:
+msg: "SWPM SAR not found under {{ sap_media_dir }}. Place media and set swpsar_path."
+when: not swpm_sar.stat.exists
+
+
+- name: Ensure SAPCAR is present
+stat:
+path: "{{ sap_media_dir }}/SAPCAR"
+register: sapcar
+
+
+- name: Fail if SAPCAR missing
+fail:
+msg: "SAPCAR not found under {{ sap_media_dir }}."
+when: not sapcar.stat.exists
+
+
+- name: Unpack SWPM
+command: "{{ sap_media_dir }}/SAPCAR -xvf {{ swpsar_path }} -R {{ sap_media_dir }}/swpm"
+args:
+creates: "{{ sap_media_dir }}/swpm/sapinst"
+
+
+- name: Render SWPM params file
+template:
+src: swpm_install.params.xml.j2
+dest: "{{ sap_media_dir }}/swpm/params.xml"
+
+
+- name: Run SWPM in unattended mode (example)
+command: |
+{{ sap_media_dir }}/swpm/sapinst \
+SAPINST_INPUT_PARAMETERS_URL={{ sap_media_dir }}/swpm/params.xml \
+SAPINST_EXECUTE_PRODUCT_ID={{ swpm_product_id }} \
+SAPINST_SKIP_DIALOGS=true \
+SAPINST_START_GUI=false
+args:
+chdir: "{{ sap_media_dir }}/swpm"
+environment:
+TMPDIR: /tmp
+
+
+- name: Wait for SAP processes to be up (simple check)
+shell: "ps -ef | egrep -i 'sap|hdb' | egrep -v egrep | wc -l"
+register: ps_out
+retries: 30
+delay: 20
+until: ps_out.stdout|int > 5

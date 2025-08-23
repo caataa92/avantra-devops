@@ -1,0 +1,42 @@
+---
+- name: Ensure base packages present
+package:
+name:
+- curl
+- wget
+- unzip
+- tar
+- net-tools
+- lvm2
+- xfsprogs
+- python3
+- python3-pip
+state: present
+
+
+- name: Create SAP media dir
+file:
+path: "{{ sap_media_dir }}"
+state: directory
+mode: '0755'
+
+
+- name: Set vm.max_map_count (often required for HANA)
+sysctl:
+name: vm.max_map_count
+value: '2147483647'
+state: present
+sysctl_set: true
+reload: true
+
+
+- name: Disable swap (HANA requirement)
+command: swapoff -a
+when: ansible_swaptotal_mb | default(0) | int > 0
+
+
+- name: Remove swap entries from /etc/fstab
+replace:
+path: /etc/fstab
+regexp: '^([^#].*\\sswap\\s)'
+replace: '# \1'

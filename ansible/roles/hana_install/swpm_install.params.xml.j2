@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Profile>
+<Param name="SAPINST_USE_HOSTNAME" value="{{ ansible_fqdn | default(inventory_hostname) }}"/>
+<Param name="NW_GetSidNoProfiles.sid" value="{{ sap_sid }}"/>
+<Param name="NW_Users.sapadmPassword" value="{{ hana_master_password }}"/>
+<Param name="NW_GetMasterPassword.masterPwd" value="{{ hana_master_password }}"/>
+<Param name="NW_GetSidNoProfiles.instanceNumber" value="{{ sap_instance_number }}"/>
+<Param name="SAPINST_START_GUI" value="false"/>
+<Param name="SAPINST_SKIP_DIALOGS" value="true"/>
+<Param name="SAPINST_SET_EXIT_CODE" value="true"/>
+<Param name="nwUsers.sapadmUID" value="1001"/>
+<!-- Extend with product-specific keys per SAP Note and SWPM guide -->
+</Profile>

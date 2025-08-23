@@ -1,0 +1,12 @@
+project_id = "your-project-id"
+region = "europe-west1"
+zone = "europe-west1-b"
+
+
+# Optional overrides
+# vm_machine_type = "n2-standard-16"
+# vm_disk_size_gb = 512
+# image_project = "suse-sap-cloud"
+# image_family = "sles-15-sp5-sap-byos"
+# ssh_user = "sapadmin"
+# ssh_pubkey_path = "~/.ssh/id_rsa.pub"

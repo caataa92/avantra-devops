@@ -1,0 +1,23 @@
+# Global variables for all playbooks
+ansible_user: sapadmin
+sap_sid: HDB
+sap_instance_number: "00"
+# Paths where you will place licensed media
+sap_media_dir: "/tmp/sap_media"
+
+
+# Example HANA install params (adjust!)
+hana_sid: HDB
+hana_sys_nr: "00"
+hana_master_password: "ChangeMe123!"
+
+
+# SWPM non-interactive template variables
+swpm_product_id: "NW_ABAP_OneHost:S4HANA2023.CORE.HDB.ABAP"
+swpsar_path: "{{ sap_media_dir }}/SWPM20SP*.SAR"
+
+
+# Avantra agent
+avantra_agent_version: "24.3.0"
+avantra_server_url: "https://avantra.example.com"
+avantra_registration_key: "REPLACE_ME"
