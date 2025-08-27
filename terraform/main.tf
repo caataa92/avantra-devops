@@ -3,12 +3,11 @@ data "google_compute_network" "net" {
   name = var.network_name
 }
 
-# Latest Ubuntu 24.04 LTS image
-data "google_compute_image" "ubuntu" {
-  family  = "ubuntu-2404-lts"
+# Latest Ubuntu 24.04 LTS
+data "google_compute_image" "base" {
+  family  = "ubuntu-2204-lts"
   project = "ubuntu-os-cloud"
 }
-
 
 # Firewall: no semicolons in HCL; use newlines
 resource "google_compute_firewall" "allow_ssh" {
@@ -37,7 +36,7 @@ resource "google_compute_instance" "vm" {
 
   boot_disk {
       initialize_params {
-        image = data.google_compute_image.ubuntu.self_link
+        image = data.google_compute_image.base.self_link
         size  = 20
         type  = "pd-balanced"
       }
