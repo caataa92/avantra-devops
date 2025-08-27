@@ -1,7 +1,14 @@
-# Use the existing network by name
+# Resolve the VPC by name (defaults to "default" via variables.tf)
 data "google_compute_network" "net" {
   name = var.network_name
 }
+
+# Latest Ubuntu 24.04 LTS image
+data "google_compute_image" "ubuntu" {
+  family  = "ubuntu-2404-lts"
+  project = "ubuntu-os-cloud"
+}
+
 
 # Firewall: no semicolons in HCL; use newlines
 resource "google_compute_firewall" "allow_ssh" {
@@ -29,13 +36,12 @@ resource "google_compute_instance" "vm" {
   tags         = ["ssh"]
 
   boot_disk {
-    initialize_params {
-      # Fixed extra quote at end of line ↓
-      image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts"
-      size  = 20
-      type  = "pd-balanced"
-    }
-  }
+      initialize_params {
+        image = data.google_compute_image.ubuntu.self_link
+        size  = 20
+        type  = "pd-balanced"
+      }
+}
 
   network_interface {
     network       = data.google_compute_network.net.name
