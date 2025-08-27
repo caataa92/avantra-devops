@@ -1,0 +1,9 @@
+variable "name" { type = string }
+variable "machine_type" { type = string }
+variable "disk_size_gb" { type = number }
+variable "network" { type = string }
+variable "subnetwork" { type = string }
+variable "image_project" { type = string }
+variable "image_family" { type = string }
+variable "ssh_user" { type = string }
+variable "ssh_pubkey_path" { type = string }
